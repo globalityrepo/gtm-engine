@@ -1,0 +1,121 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>br.com.globality</groupId>
+		<artifactId>gtm-engine</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+
+	<artifactId>gtm-engine-web-api</artifactId>
+	<packaging>war</packaging>
+
+	<name>Projeto GTM-Engine: WEB API</name>
+	<description>Projeto que expõem os web services e servlets do GTM Engine.</description>
+
+	<dependencies>
+
+		<!-- Projetos relacionados -->
+		<dependency>
+			<groupId>br.com.globality</groupId>
+			<artifactId>gtm-engine-common-api</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+
+		<!-- Dependência da API do Java EE 7 para todos os módulos do projeto -->
+		<dependency>
+			<groupId>org.jboss.spec</groupId>
+			<artifactId>jboss-javaee-7.0</artifactId>
+			<version>1.0.3.Final</version>
+			<type>pom</type>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- API de testes unitários -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- API de suporte ao JAX-WS -->
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.2.10</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<!-- API de log padrão do projeto -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.21</version>
+			<scope>provided</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>mq</artifactId>
+			<version>7.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/com.ibm.mq.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm</groupId>
+			<artifactId>mqjms</artifactId>
+			<version>7.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/com.ibm.mqjms.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.mq</groupId>
+			<artifactId>headers</artifactId>
+			<version>7.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/com.ibm.mq.headers.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.mq</groupId>
+			<artifactId>commonservices</artifactId>
+			<version>7.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/com.ibm.mq.commonservices.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.ibm.mq</groupId>
+			<artifactId>jmqi</artifactId>
+			<version>7.5.0</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/com.ibm.mq.jmqi.jar</systemPath>
+		</dependency>
+
+		<dependency>
+			<groupId>com.oracle</groupId>
+			<artifactId>odbc7</artifactId>
+			<version>7</version>
+			<scope>system</scope>
+			<systemPath>${basedir}/src/main/webapp/WEB-INF/lib/odbc7-7.jar</systemPath>
+		</dependency>
+
+	</dependencies>
+
+	<build>
+		<finalName>gtm-engine-web-api</finalName>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.6</version>
+				<configuration>
+					<failOnMissingWebXml>false</failOnMissingWebXml>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>
