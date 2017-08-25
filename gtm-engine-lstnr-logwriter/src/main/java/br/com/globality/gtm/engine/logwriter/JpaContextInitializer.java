@@ -1,4 +1,4 @@
-package br.com.globality.gtm.engine.messenger;
+package br.com.globality.gtm.engine.logwriter;
 
 import java.util.HashMap;
 
@@ -23,7 +23,7 @@ import br.com.globality.gtm.engine.common.util.CommonConstants;
 @EnableJpaRepositories(basePackages = { "br.com.globality.gtm.engine" })
 @EnableTransactionManagement
 @PropertySource("file:" + CommonConstants.APP_CONFIG_PATH + "/application.properties")
-public class JpaContextConfig {
+public class JpaContextInitializer {
 
 	@Autowired
 	private Environment env;

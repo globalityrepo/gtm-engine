@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ibm.mq.MQQueueManager;
 
 import br.com.globality.gtm.engine.common.exception.BusinessException;
+import br.com.globality.gtm.engine.logwriter.executor.LogWriterExecutor;
 import br.com.globality.gtm.engine.logwriter.service.LogWriterService;
 
 /**
@@ -36,7 +37,18 @@ public class LogWriterTask implements Runnable {
 	}
 
 	@Override
-	public void run() {		
+	public void run() {	
+		initialize();
+		execute();
+		finalize();
+	}
+	
+	public void initialize() {	
+		logger.debug("== LogWriterTask - Started ==");
+		LogWriterExecutor.threadCounter.getAndIncrement();
+	}
+	
+	public void execute() {	
 		boolean commitQueueManager = true;
 		try {
 			logWriterService.execute(envXml);
@@ -59,6 +71,11 @@ public class LogWriterTask implements Runnable {
 				}
 			}
 		}
+	}
+	
+	public void finalize() {	
+		LogWriterExecutor.threadCounter.getAndIncrement();
+		logger.debug("== LogWriterTask - Finished ==");
 	}
 	
 }

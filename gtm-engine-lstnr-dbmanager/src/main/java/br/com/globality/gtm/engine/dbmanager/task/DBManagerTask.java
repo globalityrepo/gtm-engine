@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ibm.mq.MQQueueManager;
 
 import br.com.globality.gtm.engine.common.exception.BusinessException;
+import br.com.globality.gtm.engine.dbmanager.executor.DBManagerExecutor;
 import br.com.globality.gtm.engine.dbmanager.service.DBManagerService;
 
 /**
@@ -36,7 +37,18 @@ public class DBManagerTask implements Runnable {
 	}
 	
 	@Override
-	public void run() {		
+	public void run() {	
+		initialize();
+		execute();
+		finalize();
+	}
+	
+	public void initialize() {	
+		logger.debug("== DBManagerTask - Started ==");
+		DBManagerExecutor.threadCounter.getAndIncrement();
+	}
+	
+	public void execute() {	
 		boolean commitQueueManager = true;
 		try {
 			dbManagerService.execute(envXml);
@@ -58,7 +70,12 @@ public class DBManagerTask implements Runnable {
 					logger.error(e.getMessage(), e);		
 				}
 			}
-		}
+		}	
 	}
-
+	
+	public void finalize() {	
+		DBManagerExecutor.threadCounter.getAndIncrement();
+		logger.debug("== DBManagerTask - Finished ==");
+	}
+	
 }

@@ -57,7 +57,7 @@
 	</dependencies>
 	
 	<build>
-		<finalName>gtm-engine-lsntr-dbmanager</finalName>
+		<finalName>gtm-engine-lstnr-dbmanager</finalName>
 		<plugins>
 			<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>

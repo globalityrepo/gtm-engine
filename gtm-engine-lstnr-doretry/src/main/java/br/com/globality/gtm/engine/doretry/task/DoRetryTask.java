@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import br.com.globality.gtm.engine.common.domain.TransacaoPassoAcaoTodo;
 import br.com.globality.gtm.engine.common.exception.BusinessException;
+import br.com.globality.gtm.engine.doretry.executor.DoRetryExecutor;
 import br.com.globality.gtm.engine.doretry.service.DoRetryService;
 
 /**
@@ -32,7 +33,18 @@ public class DoRetryTask implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void run() {	
+		initialize();
+		execute();
+		finalize();
+	}
+	
+	public void initialize() {	
+		logger.debug("== DoRetryTask - Started ==");
+		DoRetryExecutor.threadCounter.getAndIncrement();
+	}
+	
+	public void execute() {	
 		try {
 			doRetryService.execute(transacaoPassoAcaoTodo);
 		}
@@ -43,5 +55,10 @@ public class DoRetryTask implements Runnable {
 			logger.error(e.getMessage(), e);			
 		}
 	}
-
+	
+	public void finalize() {	
+		DoRetryExecutor.threadCounter.getAndIncrement();
+		logger.debug("== DoRetryTask - Finished ==");
+	}
+	
 }

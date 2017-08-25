@@ -69,7 +69,7 @@ public class MessengerServiceImpl implements MessengerService {
 			
 			if (envObj.getAcao()==CommonConstants.ACAO_RESSUB) { 
 				
-				String baseUrl = AppConfigBundle.getProperty("env.engine.baseurl") ;
+				String baseUrl = AppConfigBundle.getProperty("env.engine.baseurl");
 				if (StringUtils.isNotBlank(baseUrl))  {
 					if (baseUrl.lastIndexOf('/')!=baseUrl.length()-1) 
 						baseUrl += '/';

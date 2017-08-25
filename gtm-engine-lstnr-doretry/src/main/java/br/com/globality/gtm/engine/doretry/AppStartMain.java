@@ -2,8 +2,9 @@ package br.com.globality.gtm.engine.doretry;
 
 import org.apache.log4j.Logger;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
+
+import br.com.globality.gtm.engine.doretry.executor.DoRetryExecutor;
 
 /**Inicializador dos listeners para escuta das filas do GTM.
 * @author Leonardo Andrade
@@ -19,10 +20,11 @@ public class AppStartMain {
 	public static void main(String[] args) {
 		
 		// Inicializa o contexto do Spring.
-		AnnotationConfigApplicationContext ctx  = new AnnotationConfigApplicationContext(ThreadPoolContextConfig.class);
+		AnnotationConfigApplicationContext ctx  = new AnnotationConfigApplicationContext(SpringContextInitializer.class);
 		
 		// Inicializa o job.
-		ThreadPoolTaskExecutor jobExecutor = (ThreadPoolTaskExecutor) ctx.getBean("runDoRetryExecutor");
+		DoRetryExecutor executor = (DoRetryExecutor) ctx.getBean("doRetryExecutor");
+		executor.init();
 			
 	}
 	

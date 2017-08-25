@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ibm.mq.MQQueueManager;
 
 import br.com.globality.gtm.engine.common.exception.BusinessException;
+import br.com.globality.gtm.engine.messenger.executor.MessengerExecutor;
 import br.com.globality.gtm.engine.messenger.service.MessengerService;
 
 /**
@@ -36,7 +37,18 @@ public class MessengerTask implements Runnable {
 	}
 	
 	@Override
-	public void run() {
+	public void run() {	
+		initialize();
+		execute();
+		finalize();
+	}
+	
+	public void initialize() {
+		logger.debug("== MessengerTask - Started ==");
+		MessengerExecutor.threadCounter.getAndIncrement();
+	}
+	
+	public void execute() {	
 		boolean commitQueueManager = true;
 		try {
 			messengerService.execute(envXml);
@@ -60,5 +72,10 @@ public class MessengerTask implements Runnable {
 			}
 		}
 	}
-
+	
+	public void finalize() {	
+		MessengerExecutor.threadCounter.getAndIncrement();
+		logger.debug("== MessengerTask - Finished ==");
+	}
+	
 }

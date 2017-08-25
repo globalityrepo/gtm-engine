@@ -1,24 +1,28 @@
 package br.com.globality.gtm.engine.logwriter.executor;
 
 import java.util.Locale;
+import java.util.MissingResourceException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Component;
 
 import com.ibm.mq.MQException;
 import com.ibm.mq.MQQueueManager;
 
 import br.com.globality.gtm.engine.common.domain.ConfiguracaoSistema;
-import br.com.globality.gtm.engine.common.exception.JobException;
+import br.com.globality.gtm.engine.common.util.AppConfigBundle;
 import br.com.globality.gtm.engine.common.util.CommonConstants;
 import br.com.globality.gtm.engine.common.util.CommonUtils;
 import br.com.globality.gtm.engine.common.util.MessageResource;
 import br.com.globality.gtm.engine.logwriter.service.LogWriterService;
 import br.com.globality.gtm.engine.logwriter.task.LogWriterTask;
+import br.com.globality.gtm.engine.logwriter.task.PoolSizeLoggerTask;
 
 /**
  * Listenner para a fila de mensagens para escrita do arquivo texto da Engine do GTM.
@@ -33,44 +37,91 @@ public class LogWriterExecutor {
 	final static Logger logger = Logger.getLogger(LogWriterExecutor.class);
 	
 	@Autowired
-	@Qualifier("runLogWriterExecutor")
-	ThreadPoolTaskExecutor poolTaskExecutor;
-	
-	@Autowired
 	private LogWriterService logWriterService;
 	
 	@Autowired
 	private MessageResource messageResource;
 	
-	@Scheduled(fixedDelay=5000)
-	public void listener() throws Exception {
-		MQQueueManager queueManager = null;
+	public static AtomicInteger threadCounter = new AtomicInteger(0);
+	
+	public void init() {
+		ExecutorService executor = null;
 		try {
-			// Definindo o locale da aplicação.
-			ConfiguracaoSistema configApp = logWriterService.findConfiguracaoSistema();
-			CommonUtils.changeAppLocale(configApp.getLocale());
-			// Estabelecendo comunicação com o MQ Server.
-			queueManager = CommonUtils.initQueueManager();
-			String envXml = CommonUtils.readMQMessageBySyncPoint(queueManager, CommonConstants.QUEUE_FILE);
-			if (envXml!=null) {
-				poolTaskExecutor.execute(new LogWriterTask(envXml, logWriterService, queueManager));
-			}
-			else if (queueManager!=null) {
-				try {
-					queueManager.disconnect();
-				}
-				catch (Exception e) {
-					logger.error(e);
+			// Define o locale da aplicação.
+			localeSetup();
+			
+			// Recupera a tamanho do pool do arquivo de configurações.
+			final Integer POOL_SIZE = Integer.valueOf(AppConfigBundle.getProperty("logwriter.threadpool.size"));
+			
+			// Agenda a execução da task de verificação do tamanho do pool.
+			schedulePoolSizeLoggerTask();
+			
+			// Criação de pool de tasks.
+			executor = Executors.newCachedThreadPool();	
+			
+			// Loop para instanciar tasks.
+			while (true) {
+				if (POOL_SIZE>threadCounter.get()) {
+					// Estabelecendo comunicação com o MQ Server.
+					MQQueueManager queueManager = null;
+					try {
+						queueManager = CommonUtils.initQueueManager();
+						String envXml = CommonUtils.readMQMessageBySyncPoint(queueManager, CommonConstants.QUEUE_FILE);
+						if (envXml!=null) {
+							executor.submit(new LogWriterTask(envXml, logWriterService, queueManager));
+						}
+						else if (queueManager!=null) {
+							try {
+								queueManager.disconnect();
+							}
+							catch (Exception e) {
+								logger.error(e);
+							}
+						}					
+					}
+					catch (MQException e) {
+						e.printStackTrace();
+						logger.error(messageResource.getMessage("message.queue.access.error", new String[] {CommonConstants.QUEUE_FILE}, Locale.getDefault()), e);
+						Thread.sleep(5000);
+					}
+					catch (Exception e) {
+						e.printStackTrace();
+						logger.error(messageResource.getMessage("message.erro.ineperado", null, Locale.getDefault()), e);
+						Thread.sleep(5000);
+					}
 				}
 			}
 		}
-		catch (MQException e) {
-			throw new JobException(messageResource.getMessage("message.queue.access.error", new String[] {CommonConstants.QUEUE_FILE}, Locale.getDefault()), e);
+		catch (MissingResourceException | NumberFormatException e) {
+			logger.error(messageResource.getMessage("message.erro.threadpoolsize.bad", null, Locale.getDefault()));
 		}
 		catch (Exception e) {
-			logger.error(e.getMessage(), e);
-			throw new JobException(messageResource.getMessage("message.erro.ineperado", null, Locale.getDefault()), e);
+			e.printStackTrace();
+			logger.error(messageResource.getMessage("message.erro.ineperado", null, Locale.getDefault()), e);
+		}
+		finally {
+			if (executor!=null) {
+				executor.shutdown();
+			}
+			this.init(); 
 		}
 	}
-
+	
+	private void localeSetup() throws Exception {
+		ConfiguracaoSistema configApp = logWriterService.findConfiguracaoSistema();
+		CommonUtils.changeAppLocale(configApp.getLocale());
+	}
+	
+	private void schedulePoolSizeLoggerTask() {
+		ScheduledExecutorService executor = null;
+		try {
+			executor = Executors.newSingleThreadScheduledExecutor();
+			executor.scheduleAtFixedRate(new PoolSizeLoggerTask(), 1, 60, TimeUnit.SECONDS);
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+			logger.error(messageResource.getMessage("message.erro.ineperado", null, Locale.getDefault()), e);
+		}
+	}
+	
 }
