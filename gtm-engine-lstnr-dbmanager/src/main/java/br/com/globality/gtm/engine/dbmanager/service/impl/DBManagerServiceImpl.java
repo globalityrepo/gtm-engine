@@ -75,7 +75,7 @@ public class DBManagerServiceImpl implements DBManagerService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {ServiceException.class, BusinessException.class})
 	public void execute(String envXml) throws ServiceException, BusinessException {		
 		
-		try {			
+		try {		
 			// Converte o XML do envelope para o objeto POJO de Log.
 			GTMEnvelopeType envObj = (GTMEnvelopeType) CommonUtils.convertXmlToObj(envXml, GTMEnvelopeType.class);
 			
@@ -142,6 +142,9 @@ public class DBManagerServiceImpl implements DBManagerService {
 	private String addEvent(GTMEnvelopeType envObj, TransacaoGrupo transacaoGrupo) throws ServiceException, ValidationException {
 		
 		try {
+			// Recupera a data do evento.
+			Date dtEvento = envObj.getTrxEventInstDt()!=null ? envObj.getTrxEventInstDt().getTime() : new Date();
+						
 			// Variáveis de controle de filtro e conteudo de evento.
 			String  idcEventInstanceCont = "N";
 			
@@ -154,7 +157,7 @@ public class DBManagerServiceImpl implements DBManagerService {
 				transacaoInstancia.setId(envObj.getTrxInstIdentifier());
 				transacaoInstancia.setTransacaoGrupo(transacaoGrupo);
 				transacaoInstancia.setTransacaoInstanciaPai(null);
-				transacaoInstancia.setData(new Date());
+				transacaoInstancia.setData(dtEvento);
 				genericDAO.add(transacaoInstancia);
 			}
 				
@@ -195,7 +198,7 @@ public class DBManagerServiceImpl implements DBManagerService {
 				transacaoPassoInstancia.setId(envObj.getTrxStpInstIdentifier());
 				transacaoPassoInstancia.setTransacaoInstancia(transacaoInstancia);
 				transacaoPassoInstancia.setTransacaoPasso(transacaoPasso);
-				transacaoPassoInstancia.setData(new Date());
+				transacaoPassoInstancia.setData(dtEvento);
 				genericDAO.add(transacaoPassoInstancia);
 			}
 		
@@ -239,7 +242,7 @@ public class DBManagerServiceImpl implements DBManagerService {
 				vo.setConteudo(idcEventInstanceCont);
 				vo.setTransacaoPassoInstancia(transacaoPassoInstancia);
 				vo.setEventoInstanciaPai(null);
-				vo.setData(new Date());
+				vo.setData(dtEvento);
 				vo.setEventoNivel(transacaoPassoEventoNivel.getEventoNivel());
 				vo.setEventoTipo(eventoTipo);
 				genericDAO.add(vo);
