@@ -77,7 +77,9 @@ public class MessengerExecutor {
 							catch (Exception e) {
 								logger.error(e);
 							}
-						}					
+						}	
+						// Intervalo de execução.
+						Thread.sleep(1000); // 1s
 					}
 					catch (MQException e) {
 						e.printStackTrace();

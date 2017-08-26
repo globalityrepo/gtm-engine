@@ -33,7 +33,7 @@ import com.ibm.mq.constants.CMQC;
 import com.ibm.mq.constants.MQConstants;
 
 public class CommonUtils {
-		
+	
 	@SuppressWarnings("unchecked")
 	public static MQQueueManager initQueueManager() throws MQException {	
 		MQEnvironment.hostname = AppConfigBundle.getProperty("mq.hostname");
@@ -134,10 +134,10 @@ public class CommonUtils {
 	* @throws MQException.
 	*/
 	public static void writeQueueMQ(MQQueueManager queueManager, String queueName, String inputMsg) throws MQException {
-		MQTopic topic = null;
+		MQQueue queue = null;
 		try {
-			// Acessando o tópico de destino.
-			MQQueue queue = queueManager.accessQueue( queueName, CMQC.MQOO_OUTPUT+CMQC.MQOO_FAIL_IF_QUIESCING);
+			// Acessando a fila de destino.
+			queue = queueManager.accessQueue( queueName, CMQC.MQOO_OUTPUT+CMQC.MQOO_FAIL_IF_QUIESCING);
 
 	        // Encapsulando a mensagem a ser publicada.
 			MQMessage message = new MQMessage();
@@ -149,10 +149,10 @@ public class CommonUtils {
 		} 
 		catch (Exception e) {
 			e.printStackTrace();
-		} 
+		}
 		finally {
-			if (topic!=null)
-				topic.close();
+			if (queue!=null)
+				queue.close();
 		}
 	}
 	

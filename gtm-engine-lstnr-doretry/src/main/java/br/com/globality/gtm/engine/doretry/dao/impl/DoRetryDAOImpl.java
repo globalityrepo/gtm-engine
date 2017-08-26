@@ -1,5 +1,6 @@
 package br.com.globality.gtm.engine.doretry.dao.impl;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,7 @@ import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Join;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import javax.persistence.criteria.Subquery;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -21,6 +23,7 @@ import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import br.com.globality.gtm.engine.common.domain.EventoInstancia;
 import br.com.globality.gtm.engine.common.domain.EventoInstanciaConteudo;
 import br.com.globality.gtm.engine.common.domain.EventoTipo;
 import br.com.globality.gtm.engine.common.domain.Grupo;
@@ -148,13 +151,21 @@ public class DoRetryDAOImpl implements DoRetryDAO {
 			CriteriaBuilder cb = em.getCriteriaBuilder();
 			CriteriaQuery<EventoInstanciaConteudo> cq = cb.createQuery(EventoInstanciaConteudo.class);
 			Root<EventoInstanciaConteudo> rootEntry = cq.from(EventoInstanciaConteudo.class);
-			CriteriaQuery<EventoInstanciaConteudo> all = cq.select(rootEntry);
-			Join<EventoInstanciaConteudo, TransacaoPassoInstancia> transacaoPassoInstanciaJoin = rootEntry.join("transacaoPassoInstancia");
-			Join<EventoInstanciaConteudo, TransacaoInstancia> transacaoInstanciaJoin = rootEntry.join("transacaoInstancia");
-			Predicate predicate = cb.equal(transacaoPassoInstanciaJoin.get("id"), idTransacaoPassoInstancia);
-			predicate = cb.and(predicate, cb.equal(transacaoInstanciaJoin.get("id"), idTransacaoInstancia));
-			cq.where(predicate);
-			TypedQuery<EventoInstanciaConteudo> query = em.createQuery(all);
+			CriteriaQuery<EventoInstanciaConteudo> all = cq.select(rootEntry);			
+			List<Predicate> mainQueryPredicates = new ArrayList<Predicate>(); 			
+			Subquery<EventoInstancia> subquery = all.subquery(EventoInstancia.class); 
+			Root<EventoInstancia> eventoInstanciaRootEntry = subquery.from(EventoInstancia.class);  
+			subquery.select(eventoInstanciaRootEntry);
+			Join<EventoInstancia, TransacaoPassoInstancia> transacaoPassoInstanciaJoin = eventoInstanciaRootEntry.join("transacaoPassoInstancia");
+			Join<TransacaoPassoInstancia, TransacaoInstancia> transacaoInstanciaJoin = transacaoPassoInstanciaJoin.join("transacaoInstancia");
+			List<Predicate> subQueryPredicates = new ArrayList<Predicate>(); 
+			subQueryPredicates.add(cb.equal(eventoInstanciaRootEntry.get("id"), rootEntry.get("id")));
+			subQueryPredicates.add(cb.equal(transacaoPassoInstanciaJoin.get("id"), idTransacaoPassoInstancia));
+			subQueryPredicates.add(cb.equal(transacaoInstanciaJoin.get("id"), idTransacaoInstancia));
+			subquery.where(subQueryPredicates.toArray(new Predicate[]{})); 			
+			mainQueryPredicates.add(cb.exists(subquery));
+			cq.where(mainQueryPredicates.toArray(new Predicate[]{})); 
+			TypedQuery<EventoInstanciaConteudo> query = em.createQuery(cq);
 			return query.getSingleResult();
 		}
 		catch (NoResultException e) {

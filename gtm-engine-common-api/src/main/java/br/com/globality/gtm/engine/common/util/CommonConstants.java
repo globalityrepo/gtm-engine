@@ -17,5 +17,5 @@ public class CommonConstants {
 	public static final String STATUS_ACAO_EXECUTANDO = "X";
 	
 	public static final String STATUS_ACAO_PARADA = "N";
-	
+			
 }

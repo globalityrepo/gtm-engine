@@ -38,17 +38,8 @@ public class LogWriterTask implements Runnable {
 
 	@Override
 	public void run() {	
-		initialize();
-		execute();
-		finalize();
-	}
-	
-	public void initialize() {	
 		logger.debug("== LogWriterTask - Started ==");
-		LogWriterExecutor.threadCounter.getAndIncrement();
-	}
-	
-	public void execute() {	
+		LogWriterExecutor.threadCounter.getAndIncrement();		
 		boolean commitQueueManager = true;
 		try {
 			logWriterService.execute(envXml);
@@ -70,11 +61,8 @@ public class LogWriterTask implements Runnable {
 					logger.error(e.getMessage(), e);		
 				}
 			}
-		}
-	}
-	
-	public void finalize() {	
-		LogWriterExecutor.threadCounter.getAndIncrement();
+		}		
+		LogWriterExecutor.threadCounter.getAndDecrement();
 		logger.debug("== LogWriterTask - Finished ==");
 	}
 	

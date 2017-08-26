@@ -38,17 +38,8 @@ public class MessengerTask implements Runnable {
 	
 	@Override
 	public void run() {	
-		initialize();
-		execute();
-		finalize();
-	}
-	
-	public void initialize() {
 		logger.debug("== MessengerTask - Started ==");
 		MessengerExecutor.threadCounter.getAndIncrement();
-	}
-	
-	public void execute() {	
 		boolean commitQueueManager = true;
 		try {
 			messengerService.execute(envXml);
@@ -71,10 +62,7 @@ public class MessengerTask implements Runnable {
 				}
 			}
 		}
-	}
-	
-	public void finalize() {	
-		MessengerExecutor.threadCounter.getAndIncrement();
+		MessengerExecutor.threadCounter.getAndDecrement();
 		logger.debug("== MessengerTask - Finished ==");
 	}
 	

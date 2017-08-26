@@ -12,7 +12,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.ibm.mq.MQQueue;
 import com.ibm.mq.MQQueueManager;
 
 import br.com.globality.gtm.engine.common.domain.ConfiguracaoSistema;
@@ -35,7 +34,7 @@ import br.com.globality.gtm.engine.doretry.service.DoRetryService;
  * 
  * @author Leonardo Andrade
  * @version 1.0
- * @since 25/04/2017O
+ * @since 25/04/2017
  */
 @Service("doRetryService")
 @Scope("prototype")
@@ -57,8 +56,7 @@ public class DoRetryServiceImpl implements DoRetryService {
 	@Transactional(propagation = Propagation.REQUIRES_NEW, rollbackFor = {ServiceException.class, BusinessException.class})
 	public void execute(TransacaoPassoAcaoTodo transacaoPassoAcaoTodo) throws ServiceException, BusinessException {		
 		
-		MQQueueManager queueManager = null;
-		MQQueue queue = null;		
+		MQQueueManager queueManager = null;	
 		try {				
 			// Atualiza o registro da acao para EM EXECUÇÃO.
 			transacaoPassoAcaoTodo.setStatus(CommonConstants.STATUS_ACAO_EXECUTANDO);
@@ -102,8 +100,6 @@ public class DoRetryServiceImpl implements DoRetryService {
 		finally {
 			try {
 				// Fechando objetos de conexão ao MQ server.
-				if (queue!=null)
-					queue.close();
 				if (queueManager!=null)
 					queueManager.disconnect();
 			}

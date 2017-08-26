@@ -34,17 +34,8 @@ public class DoRetryTask implements Runnable {
 	
 	@Override
 	public void run() {	
-		initialize();
-		execute();
-		finalize();
-	}
-	
-	public void initialize() {	
 		logger.debug("== DoRetryTask - Started ==");
-		DoRetryExecutor.threadCounter.getAndIncrement();
-	}
-	
-	public void execute() {	
+		DoRetryExecutor.threadCounter.getAndIncrement();		
 		try {
 			doRetryService.execute(transacaoPassoAcaoTodo);
 		}
@@ -54,10 +45,7 @@ public class DoRetryTask implements Runnable {
 		catch (Exception e) {
 			logger.error(e.getMessage(), e);			
 		}
-	}
-	
-	public void finalize() {	
-		DoRetryExecutor.threadCounter.getAndIncrement();
+		DoRetryExecutor.threadCounter.getAndDecrement();
 		logger.debug("== DoRetryTask - Finished ==");
 	}
 	

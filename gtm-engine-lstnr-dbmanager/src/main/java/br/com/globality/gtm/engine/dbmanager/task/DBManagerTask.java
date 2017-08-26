@@ -38,17 +38,8 @@ public class DBManagerTask implements Runnable {
 	
 	@Override
 	public void run() {	
-		initialize();
-		execute();
-		finalize();
-	}
-	
-	public void initialize() {	
 		logger.debug("== DBManagerTask - Started ==");
 		DBManagerExecutor.threadCounter.getAndIncrement();
-	}
-	
-	public void execute() {	
 		boolean commitQueueManager = true;
 		try {
 			dbManagerService.execute(envXml);
@@ -71,11 +62,8 @@ public class DBManagerTask implements Runnable {
 				}
 			}
 		}	
-	}
-	
-	public void finalize() {	
-		DBManagerExecutor.threadCounter.getAndIncrement();
+		DBManagerExecutor.threadCounter.getAndDecrement();
 		logger.debug("== DBManagerTask - Finished ==");
 	}
-	
+		
 }

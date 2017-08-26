@@ -75,7 +75,9 @@ public class DBManagerExecutor {
 							catch (Exception e) {
 								logger.error(e);
 							}
-						}					
+						}	
+						// Intervalo de execução.
+						Thread.sleep(500); // 0.5s
 					}
 					catch (MQException e) {
 						e.printStackTrace();

@@ -68,9 +68,10 @@ public class DoRetryExecutor {
 					catch (Exception e) {
 						e.printStackTrace();
 						logger.error(messageResource.getMessage("message.erro.ineperado", null, Locale.getDefault()), e);
-						Thread.sleep(5000);
 					}
 				}
+				// Intervalo de execução.
+				Thread.sleep(5000); // 5s
 			}
 		}
 		catch (MissingResourceException | NumberFormatException e) {
