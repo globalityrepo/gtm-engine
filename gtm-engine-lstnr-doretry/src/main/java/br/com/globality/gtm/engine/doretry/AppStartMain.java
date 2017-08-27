@@ -18,14 +18,14 @@ public class AppStartMain {
 		
 	@SuppressWarnings({ "unused", "resource" })
 	public static void main(String[] args) {
-		
+				
 		// Inicializa o contexto do Spring.
 		AnnotationConfigApplicationContext ctx  = new AnnotationConfigApplicationContext(SpringContextInitializer.class);
 		
 		// Inicializa o job.
 		DoRetryExecutor executor = (DoRetryExecutor) ctx.getBean("doRetryExecutor");
 		executor.init();
-			
+					
 	}
 	
 }

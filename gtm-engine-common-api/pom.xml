@@ -86,7 +86,7 @@
 			<version>1.0.1.Final</version>
 		</dependency>
 
-		<dependency>
+		<dependency> 
 			<groupId>commons-dbcp</groupId>
 			<artifactId>commons-dbcp</artifactId>
 			<version>1.4</version>
@@ -94,50 +94,38 @@
 
 		<dependency>
 			<groupId>com.ibm</groupId>
-			<artifactId>mq</artifactId>
+			<artifactId>mq</artifactId> 
 			<version>7.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/com.ibm.mq.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>com.ibm</groupId>
 			<artifactId>mqjms</artifactId>
 			<version>7.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/com.ibm.mqjms.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>headers</artifactId>
 			<version>7.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/com.ibm.mq.headers.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>commonservices</artifactId>
 			<version>7.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/com.ibm.mq.commonservices.jar</systemPath>
 		</dependency>
 
 		<dependency>
 			<groupId>com.ibm.mq</groupId>
 			<artifactId>jmqi</artifactId>
 			<version>7.5.0</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/com.ibm.mq.jmqi.jar</systemPath>
 		</dependency>
 
 		<dependency> 
 			<groupId>com.oracle</groupId>
 			<artifactId>odbc7</artifactId>
 			<version>7</version>
-			<scope>system</scope>
-			<systemPath>${basedir}/external/odbc7-7.jar</systemPath>
 		</dependency>
 
 	</dependencies>

@@ -73,7 +73,7 @@ public class DoRetryServiceImpl implements DoRetryService {
 					transacaoPassoAcaoTodo.getEventoInstancia().getEventoTipo().getId());
 			
 			// Verifica se o nome da fila foi informado.
-			if (StringUtils.isBlank(transacaoPassoAcao.getFilaDestino()))
+			if (StringUtils.isBlank(transacaoPassoAcao.getFilaDestino())) 
 				throw new ValidationException(messageResource.getMessage("message.queue.name.empty.error", null, Locale.getDefault()));
 			
 			// Publica o conteúdo da instância do evento na fila configurada para retry.
