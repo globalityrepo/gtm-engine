@@ -4,29 +4,36 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
- * @author Leonardo Andrade
+ * @author Bryan Duarte
  *
  */
 @Entity
-@Table(name = "ISC_TB010_EVT_NIVEL")
+@Table(name = "EVNTO_NVEL")
 public class EventoNivel extends AbstractDomain {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 3848729964218316272L;
+	private static final long serialVersionUID = -3148007011130592061L;
 
 	@Id
-	@Column(name = "CO_EVT_NIVEL", nullable = false, unique = true, length = 1)
+	@Column(name = "C_EVNTO_NVEL", nullable = false, unique = true, length = 1)
 	private String id;
 
-	@Column(name = "DE_EVT_NIVEL", nullable = true, length = 512)
+	@Column(name = "R_EVNTO_NVEL", nullable = true, length = 512)
 	private String descricao;
 
-	@Column(name = "CLASSE_NIVEL_EVENTO", nullable = true)
+	@Column(name = "N_CLASS_NVEL_EVNTO", nullable = true)
 	private Long ordem;
+		
+	@Transient
+	private boolean selecionado;
+	
+	@Transient
+	private String conteudo;
 	
 	public String getId() {
 		return id;
@@ -50,6 +57,22 @@ public class EventoNivel extends AbstractDomain {
 
 	public void setOrdem(Long ordem) {
 		this.ordem = ordem;
+	}
+	
+	public boolean getSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(boolean selecionado) {
+		this.selecionado = selecionado;
+	}
+
+	public String getConteudo() {
+		return conteudo;
+	}
+
+	public void setConteudo(String conteudo) {
+		this.conteudo = conteudo;
 	}
 		
 	@Override

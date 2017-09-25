@@ -5,40 +5,46 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 /**
- * @author Leonardo Andrade
+ * @author Bryan Duarte
  *
  */
 @Entity
-@Table(name = "ISC_TB012_TRA_INSTANCIA")
+@Table(name = "TRANS_INSTN")
+@NamedQueries({ @NamedQuery(name = "TransacaoInstancia.findAll", query = "select t from TransacaoInstancia t") })
 public class TransacaoInstancia extends AbstractDomain {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4051785710485129L;
+	private static final long serialVersionUID = -3148007011130592061L;
 
 	@Id
-	@Column(name = "NU_TRA_INSTANCIA", nullable = false, unique = true, length = 36)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "N_TRANS_INSTN", nullable = false, unique = true, length = 36)
 	private String id;
 
-	@Column(name = "TS_TRA_INSTANCIA", nullable = true)
+	@Column(name = "A_TRANS_INSTN", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRA_GRUPO", nullable=true)
+	@JoinColumn(name="N_TRANS_GRP", nullable=true)
 	private TransacaoGrupo transacaoGrupo;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRA_INS_PAI", nullable=true)
+	@JoinColumn(name="N_TRANS_INSTN_PAI", nullable=true)
 	private TransacaoInstancia transacaoInstanciaPai;
 
 	public String getId() {

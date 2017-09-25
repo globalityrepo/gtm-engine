@@ -5,31 +5,35 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 /**
  * @author Leonardo Andrade
  *
  */
 @Entity
-@Table(name = "ISC_TB002_DIVISAO")
-@SequenceGenerator(name = "seq_divisao", sequenceName = "ISC_TB002_DIVISAO_S", initialValue = 1)
+@Table(name = "DIVIS")
+@NamedQueries({ @NamedQuery(name = "Divisao.findAll", query = "select t from Divisao t") })
+@SequenceGenerator(name = "seq_divisao", sequenceName = "SQ03_DIVIS", initialValue = 1)
 public class Divisao extends AbstractDomain {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -284828036642325889L;
+	private static final long serialVersionUID = -6712881260821999482L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_divisao")
-	@Column(name = "NU_DIVISAO", nullable = false, unique = true)
+	@Column(name = "N_DIVIS", nullable = false, unique = true)
 	private Long id;
 	
-	@Column(name = "CO_DIVISAO", nullable = true, length = 64)
+	@Column(name = "C_DIVIS", nullable = true, length = 64)
 	private String codigo;
 	
-	@Column(name = "DE_DIVISAO", nullable = true, length = 512)
+	@Column(name = "R_DIVIS", nullable = true, length = 512)
 	private String descricao;
 	
 	public Long getId() {

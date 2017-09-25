@@ -10,13 +10,12 @@ import javax.persistence.Table;
 
 import br.com.globality.gtm.engine.common.domain.compositeId.TransacaoPassoEventoNivelCompositeId;
 
-
 /**
  * @author Leonardo Andrade
  *
  */
 @Entity
-@Table(name = "ISC_TB018_TRA_PAS_EVT_NIVEL")
+@Table(name = "TRANS_PASSO_EVNTONVEL")
 public class TransacaoPassoEventoNivel extends AbstractDomain {
 
 	/**
@@ -28,14 +27,14 @@ public class TransacaoPassoEventoNivel extends AbstractDomain {
 	private TransacaoPassoEventoNivelCompositeId id;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRA_PASSO", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="N_TRANS_PASSO", nullable=false, insertable=false, updatable=false)
 	private TransacaoPasso transacaoPasso;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="CO_EVT_NIVEL", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="C_EVNTO_NVEL", nullable=false, insertable=false, updatable=false)
 	private EventoNivel eventoNivel;
 	
-	@Column(name = "IC_EVT_INS_CONT", nullable = true, length = 1)
+	@Column(name = "C_EVNTO_INSTN_CONTD", nullable = true, length = 1)
 	private String conteudo;
 	
 	public TransacaoPassoEventoNivelCompositeId getId() {

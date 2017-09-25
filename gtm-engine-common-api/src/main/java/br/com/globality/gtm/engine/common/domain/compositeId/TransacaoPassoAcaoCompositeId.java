@@ -13,10 +13,10 @@ public class TransacaoPassoAcaoCompositeId implements Serializable {
 	 */
 	private static final long serialVersionUID = 4791597194017164682L;
 	
-	@Column(name = "NU_TRA_PASSO", nullable = false)
+	@Column(name = "N_TRANS_PASSO", nullable = false)
 	private Long idTransacaoPasso;
     
-	@Column(name = "CO_EVT_TIPO", nullable = false, length = 4)
+	@Column(name = "C_EVNTO_TPO", nullable = false, length = 4)
 	private String idEventoTipo;
 
 	public Long getIdTransacaoPasso() {

@@ -8,33 +8,37 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+
 /**
  * @author Leonardo Andrade
  *
  */
 @Entity
-@Table(name = "ISC_TB028_TRANSACAO_GRUPO")
-@SequenceGenerator(name = "seq_transacao_grupo", sequenceName = "ISC_TB028_TRANSACAO_GRUPO_S", initialValue = 1)
+@Table(name = "TRANS_GRP")
+@NamedQueries({ @NamedQuery(name = "TransacaoGrupo.findAll", query = "select t from TransacaoGrupo t") })
+@SequenceGenerator(name = "seq_transacao_grupo", sequenceName = "SQ12_TRA_GRUPO", initialValue = 1)
 public class TransacaoGrupo extends AbstractDomain {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2051439485227925755L;
+	private static final long serialVersionUID = -8899438330866534742L;
 
 	@Id
-	@Column(name = "NU_TRA_GRUPO", nullable = false, unique = true)
+	@Column(name = "N_TRANS_GRP", nullable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_transacao_grupo")
 	private Long id;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRANSACAO", nullable=true)
+	@JoinColumn(name="N_TRANS", nullable=true)
 	private Transacao transacao;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_GRUPO", nullable=true)
+	@JoinColumn(name="N_GRP", nullable=true)
 	private Grupo grupo;
 		
 	public Long getId() {

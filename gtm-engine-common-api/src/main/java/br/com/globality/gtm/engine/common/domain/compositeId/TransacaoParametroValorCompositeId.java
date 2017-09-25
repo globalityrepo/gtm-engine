@@ -13,10 +13,10 @@ public class TransacaoParametroValorCompositeId implements Serializable {
 	 */
 	private static final long serialVersionUID = -6476541176301158111L;
 
-	@Column(name = "NU_PARAMETRO", nullable = false)
+	@Column(name = "N_PARM", nullable = false)
 	private Long idParametro;
     
-	@Column(name = "NU_TRA_EVT_INSTANCIA", nullable = false, length = 36)
+	@Column(name = "N_TRANS_EVNTO_INSTN", nullable = false, length = 36)
 	private String idEventoInstancia;
 
 	public Long getIdParametro() {
@@ -26,7 +26,7 @@ public class TransacaoParametroValorCompositeId implements Serializable {
 	public void setIdParametro(Long idParametro) {
 		this.idParametro = idParametro;
 	}
-	
+
 	public String getIdEventoInstancia() {
 		return idEventoInstancia;
 	}

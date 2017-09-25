@@ -5,57 +5,64 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+
 /**
  * @author Leonardo Andrade
  *
  */
 @Entity
-@Table(name = "ISC_TB008_EVT_INSTANCIA")
+@Table(name = "EVNTO_INSTN")
+@NamedQueries({ @NamedQuery(name = "EventoInstancia.findAll", query = "select t from EventoInstancia t") })
 public class EventoInstancia extends AbstractDomain {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 1540474551635030359L;
+	private static final long serialVersionUID = -8589321090705693957L;
 
 	@Id
-	@Column(name = "NU_TRA_EVT_INSTANCIA", nullable = false, unique = true, length = 36)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "N_TRANS_EVNTO_INSTN", nullable = false, unique = true, length = 36)
 	private String id;
 		
-	@Column(name = "DE_EVT_INSTANCIA", nullable = true,  length = 512)
+	@Column(name = "R_EVNTO_INSTN", nullable = true,  length = 512)
 	private String descricao;
 	
-	@Column(name = "TS_EVT_INSTANCIA", nullable = true)
+	@Column(name = "A_EVNTO_INSTN", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
 		
-	@Column(name = "IC_EVT_INS_CONTEUDO", nullable = true,  length = 1)
+	@Column(name = "C_EVNTO_INSTN_CONTD", nullable = true,  length = 1)
 	private String conteudo;
 		
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name ="NU_TRA_PAS_INSTANCIA", nullable = true)
+	@JoinColumn(name ="N_TRANS_PASSO_INSTN", nullable = true)
 	private TransacaoPassoInstancia transacaoPassoInstancia;
 		
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name = "CO_EVT_NIVEL", nullable = true)
+	@JoinColumn(name = "C_EVNTO_NVEL", nullable = true)
 	private EventoNivel eventoNivel;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="CO_EVT_TIPO", nullable = true)
+	@JoinColumn(name="C_EVNTO_TPO", nullable = true)
 	private EventoTipo eventoTipo;
 	
 	@ManyToOne(optional = true, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "NU_APLICACAO", nullable = true)
+	@JoinColumn(name = "N_APLIC", nullable = true)
 	private Aplicacao aplicacao;
 	
 	@ManyToOne
-	@JoinColumn(name = "NU_TRA_EVT_INS_PAI", nullable = true)
+	@JoinColumn(name = "N_TRANS_EVNTO_INSTN_PAI", nullable = true)
 	private EventoInstancia eventoInstanciaPai;
 	
 	public String getId() {
@@ -156,3 +163,7 @@ public class EventoInstancia extends AbstractDomain {
 	}
 	
 }
+
+	
+	
+	

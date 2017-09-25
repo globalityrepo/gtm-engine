@@ -6,6 +6,8 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 import br.com.globality.gtm.engine.common.domain.compositeId.TransacaoParametroValorCompositeId;
@@ -15,26 +17,27 @@ import br.com.globality.gtm.engine.common.domain.compositeId.TransacaoParametroV
  *
  */
 @Entity
-@Table(name = "ISC_TB014_TRA_PAR_VALOR")
+@Table(name = "TRANS_PARM_VLR")
+@NamedQueries({ @NamedQuery(name = "TransacaoParametroValor.findAll", query = "select t from TransacaoParametroValor t") })
 public class TransacaoParametroValor extends AbstractDomain {
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -7478699832758817288L;
-
+	private static final long serialVersionUID = -3064674850296558707L;
+	
 	@EmbeddedId
 	private TransacaoParametroValorCompositeId id;
 	
-	@Column(name = "TXT_TRA_EVT_INS_VALOR", nullable = true, length = 512)
+	@Column(name = "R_TRANS_EVNTO_INSTN_VLR", nullable = true, length = 512)
 	private String valor;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_PARAMETRO", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="N_PARM", nullable=false, insertable=false, updatable=false)
 	private TransacaoParametro transacaoParametro;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRA_EVT_INSTANCIA", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="N_TRANS_EVNTO_INSTN", nullable=false, insertable=false, updatable=false)
 	private EventoInstancia eventoInstancia;
 	
 	public TransacaoParametroValorCompositeId getId() {

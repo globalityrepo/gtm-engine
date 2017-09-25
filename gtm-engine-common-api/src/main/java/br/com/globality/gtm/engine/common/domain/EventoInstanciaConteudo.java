@@ -5,10 +5,14 @@ import java.util.Date;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.Lob;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
@@ -18,28 +22,30 @@ import javax.persistence.TemporalType;
  *
  */
 @Entity
-@Table(name = "ISC_TB009_EVT_INS_CONTEUDO")
+@Table(name = "EVNTO_INSTN_CONTD")
+@NamedQueries({ @NamedQuery(name = "EventoInstanciaConteudo.findAll", query = "select t from EventoInstanciaConteudo t") })
 public class EventoInstanciaConteudo extends AbstractDomain {
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 5994381958638838459L;
+	private static final long serialVersionUID = 4207453230741659800L;
 
 	@Id
-	@Column(name = "NU_TRA_EVT_INSTANCIA", nullable = false, unique = true, length = 36)
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "N_TRANS_EVNTO_INSTN", nullable = false, unique = true, length = 36)
 	private String id;
 	
-	@Column(name = "TXT_TRA_EVT_INS_CONTEUDO", columnDefinition = "CLOB", nullable = true)
+	@Column(name = "B_TRANS_EVNTO_INSTN_CONTD", columnDefinition = "CLOB", nullable = true)
 	@Lob
 	private String conteudo;
 
-	@Column(name = "TS_TRA_EVT_INS_CONTEUDO", nullable = true)
+	@Column(name = "A_TRANS_EVNTO_INSTN_CONTD", nullable = true)
 	@Temporal(TemporalType.TIMESTAMP)
 	private Date data;
 	
 	@ManyToOne(optional = true, cascade = CascadeType.REFRESH)
-	@JoinColumn(name = "NU_APLICACAO", nullable = true)
+	@JoinColumn(name = "N_APLIC", nullable = true)
 	private Aplicacao aplicacao;
 	
 	public String getId() {

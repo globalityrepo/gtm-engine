@@ -8,16 +8,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
+
+import org.apache.commons.lang.StringUtils;
 
 /**
- * @author Leonardo Andrade
+ * @author Bryan Duarte
  *
  */
 @Entity
-@Table(name = "ISC_TB013_TRA_PARAMETRO ")
-@SequenceGenerator(name = "seq_transacao_paramentro", sequenceName = "ISC_TB013_TRA_PARAMETRO_S", initialValue = 1)
+@Table(name = "TRANS_PARM")
+@NamedQueries({ @NamedQuery(name = "TransacaoParametro.findAll", query = "select t from TransacaoParametro t") })
+@SequenceGenerator(name = "seq_transacao_paramentro", sequenceName = "SQ13_TRA_PARAMETRO", initialValue = 1)
 public class TransacaoParametro extends AbstractDomain {
 
 	/**
@@ -27,35 +33,41 @@ public class TransacaoParametro extends AbstractDomain {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_transacao_paramentro")
-	@Column(name = "NU_PARAMETRO", nullable = false, unique = true)
+	@Column(name = "N_PARM", nullable = false, unique = true)
 	private Long id;
 
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRANSACAO", nullable=true)
+	@JoinColumn(name="N_TRANS", nullable=true)
 	private Transacao transacao;
 	
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="CO_EVT_TIPO", nullable=true)
+	@JoinColumn(name="C_EVNTO_TPO", nullable=true)
 	private EventoTipo eventoTipo;
 	
-	@Column(name = "NO_PARAMETRO", nullable = true, length = 64)
+	@Column(name = "I_PARM", nullable = true, length = 64)
 	private String nome;
 	
-	@Column(name = "NO_PAR_NAMESPACE", nullable = true, length = 512)
+	@Column(name = "I_PARM_ENDER", nullable = true, length = 512)
 	private String namespace;
 
-	@Column(name = "NO_PAR_PREFIXO", nullable = true, length = 512)
+	@Column(name = "I_PARM_PREFX", nullable = true, length = 512)
 	private String prefixo;
 
-	@Column(name = "NO_PAR_CAMINHO", nullable = true, length = 512)
+	@Column(name = "I_PARM_CMNHO", nullable = true, length = 512)
 	private String caminho;
 
-	@Column(name = "IC_PAR_MOMENTO", nullable = true, length = 1)
+	@Column(name = "C_PARM_MOMEN", nullable = true, length = 1)
 	private String momento;
 
-	@Column(name = "IC_PAR_ATIVO", nullable = true, length = 1)
+	@Column(name = "C_PARM_ATIVO", nullable = true, length = 1)
 	private String ativo;
 		
+	@Transient
+	private String momentoFormatado;
+	
+	@Transient
+	private String ativoFormatado;
+	
 	public Long getId() {
 		return id;
 	}
@@ -112,12 +124,39 @@ public class TransacaoParametro extends AbstractDomain {
 		this.momento = momento;
 	}
 	
+	public void setMomentoFormatado(String momentoFormatado) {
+		this.momentoFormatado = momentoFormatado;
+	}
+
+	public String getMomentoFormatado() {
+		if (StringUtils.isNotBlank(momento)) {
+			if (momento.equalsIgnoreCase("I")) {
+				return "CRIAÇÃO DO CONTEÚDO DO EVENTO";
+			}
+			else if (momento.equalsIgnoreCase("M")) {
+				return "CRIAÇÃO CONSIDERANDO O PARÂMETRO";
+			}
+			else {
+				return "EXCLUSÃO DO CONTEÚDO DO EVENTO";
+			}
+		}
+		return "-";
+	}
+
 	public String getAtivo() {
 		return ativo;
 	}
 
 	public void setAtivo(String ativo) {
 		this.ativo = ativo;
+	}
+
+	public String getAtivoFormatado() {
+		return ativo!=null && ativo.equalsIgnoreCase("Y") ? "SIM" : "NÃO";
+	}
+
+	public void setAtivoFormatado(String ativoFormatado) {
+		this.ativoFormatado = ativoFormatado;
 	}
 	
 	public String getNamespace() {

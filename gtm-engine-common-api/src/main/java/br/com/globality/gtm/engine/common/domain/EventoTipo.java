@@ -3,6 +3,8 @@ package br.com.globality.gtm.engine.common.domain;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 /**
@@ -10,19 +12,20 @@ import javax.persistence.Table;
  *
  */
 @Entity
-@Table(name = "ISC_TB011_EVT_TIPO")
+@Table(name = "EVNTO_TIPO")
+@NamedQueries({ @NamedQuery(name = "EventoTipo.findAll", query = "select t from EventoTipo t") })
 public class EventoTipo extends AbstractDomain {
 	
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -6704262081812085091L;
+	private static final long serialVersionUID = 1301672478347322612L;
 
 	@Id
-	@Column(name = "CO_EVT_TIPO", nullable = false, length = 4)
+	@Column(name = "C_EVNTO_TPO", nullable = false, length = 4)
 	private String id;
 	
-	@Column(name = "DE_EVT_TIPO", nullable = true, length = 512)
+	@Column(name = "R_EVNTO_TPO", nullable = true, length = 512)
 	private String descricao;
 		
 	public String getId() {

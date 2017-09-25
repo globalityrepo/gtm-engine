@@ -5,34 +5,44 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
- * @author Leonardo Andrade
+ * @author Bryan Duarte
  *
  */
 @Entity
-@Table(name = "ISC_TB007_GRUPO")
-@SequenceGenerator(name = "seq_grupo", sequenceName = "ISC_TB007_GRUPO_S", initialValue = 1)
+@Table(name = "GRP")
+@NamedQueries({ @NamedQuery(name = "Grupo.findAll", query = "select t from Grupo t") })
+@SequenceGenerator(name = "seq_grupo", sequenceName = "SQ16_GRP", initialValue = 1)
 public class Grupo extends AbstractDomain {
-	
+
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 4467234167327449496L;
+	private static final long serialVersionUID = -6953278417112770729L;
 
 	@Id
-	@Column(name = "NU_GRUPO", nullable = false, unique = true)
+	@Column(name = "N_GRP", nullable = false, unique = true)
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_grupo")
 	private Long id;
 
-	@Column(name = "CO_GRUPO", nullable = false, length = 64)
+	@Column(name = "C_GRP", nullable = false, length = 64)
 	private String codigo;
 
-	@Column(name = "DE_GRUPO", nullable = false, length = 512)
+	@Column(name = "R_GRP", nullable = false, length = 512)
 	private String descricao;
 	
+	@Transient
+	private boolean selecionado;
+	
+	@Transient 
+	private Long idTransacaoGrupo;
+
 	public Long getId() {
 		return id;
 	}
@@ -55,6 +65,22 @@ public class Grupo extends AbstractDomain {
 
 	public void setDescricao(String descricao) {
 		this.descricao = descricao;
+	}
+
+	public boolean isSelecionado() {
+		return selecionado;
+	}
+
+	public void setSelecionado(boolean selecionado) {
+		this.selecionado = selecionado;
+	}
+
+	public Long getIdTransacaoGrupo() {
+		return idTransacaoGrupo;
+	}
+
+	public void setIdTransacaoGrupo(Long idTransacaoGrupo) {
+		this.idTransacaoGrupo = idTransacaoGrupo;
 	}
 
 	@Override

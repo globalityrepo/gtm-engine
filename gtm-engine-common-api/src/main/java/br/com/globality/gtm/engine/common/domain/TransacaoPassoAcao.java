@@ -6,7 +6,10 @@ import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import br.com.globality.gtm.engine.common.domain.compositeId.TransacaoPassoAcaoCompositeId;
 
@@ -15,53 +18,57 @@ import br.com.globality.gtm.engine.common.domain.compositeId.TransacaoPassoAcaoC
  *
  */
 @Entity
-@Table(name = "ISC_TB004_TRA_PAS_ACAO")
+@Table(name = "TRANS_PASSO_ACAO")
+@NamedQueries({ @NamedQuery(name = "TransacaoPassoAcao.findAll", query = "select t from TransacaoPassoAcao t") })
 public class TransacaoPassoAcao extends AbstractDomain {
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 3570994659217632995L;
 
+	private static final long serialVersionUID = 2337198258061138851L;
+	
 	@EmbeddedId
 	private TransacaoPassoAcaoCompositeId id;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="NU_TRA_PASSO", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="N_TRANS_PASSO", nullable=false, insertable=false, updatable=false)
 	private TransacaoPasso transacaoPasso;
 	
 	@ManyToOne(optional=false, cascade=CascadeType.REFRESH)
-	@JoinColumn(name="CO_EVT_TIPO", nullable=false, insertable=false, updatable=false)
+	@JoinColumn(name="C_EVNTO_TPO", nullable=false, insertable=false, updatable=false)
 	private EventoTipo eventoTipo;
 	
-	@Column(name = "QT_INTERVALO", nullable = true)
+	@Column(name = "Q_INTVL", nullable = true)
 	private Long intervalo;
 	
-	@Column(name = "QT_TENTATIVAS", nullable = true)
+	@Column(name = "Q_TENTV", nullable = true)
 	private Long qtdeTentativas;
 	
-	@Column(name = "DE_FILA_DESTINO", nullable = true, length = 512)
+	@Column(name = "R_FILA_DSTNO", nullable = true, length = 512)
 	private String filaDestino;
 	
-	@Column(name = "DE_DESTINATARIO", nullable = true, length = 512)
+	@Column(name = "R_DSTNA", nullable = true, length = 512)
 	private String destinatario;
 	
-	@Column(name = "IC_REENVIO", nullable = true, length = 1)
+	@Column(name = "C_REENV", nullable = true, length = 1)
 	private String reenvio;
 	
-	@Column(name = "DE_TRA_NU_XPATH", nullable = true, length = 512)
+	@Column(name = "R_TRANS_NRO_CMNHO", nullable = true, length = 512)
 	private String xpath;
 	
-	@Column(name = "DE_TRA_NU_NAMESPACE", nullable = true, length = 512)
+	@Column(name = "R_TRANS_NRO_ENDER", nullable = true, length = 512)
 	private String namespace;
 	
-	@Column(name = "DE_TRA_NU_PREFIXO", nullable = true, length = 512)
+	@Column(name = "R_TRANS_NRO_PREFX", nullable = true, length = 512)
 	private String prefixoNameSpace;
+	
+	@Transient
+	private String reenvioFormatado;
+	
+	@Transient 
+	private Long idFake;
 	
 	public TransacaoPassoAcaoCompositeId getId() {
 		return id;
 	}
-
+	
 	public void setId(TransacaoPassoAcaoCompositeId id) {
 		this.id = id;
 	}
@@ -69,7 +76,7 @@ public class TransacaoPassoAcao extends AbstractDomain {
 	public TransacaoPasso getTransacaoPasso() {
 		return transacaoPasso;
 	}
-
+	
 	public void setTransacaoPasso(TransacaoPasso transacaoPasso) {
 		this.transacaoPasso = transacaoPasso;
 	}
@@ -122,6 +129,14 @@ public class TransacaoPassoAcao extends AbstractDomain {
 		this.reenvio = reenvio;
 	}
 
+	public String getReenvioFormatado() {
+		return reenvio!=null && reenvio.equalsIgnoreCase("Y") ? "SIM" : "NÃO";
+	}
+
+	public void setReenvioFormatado(String reenvioFormatado) {
+		this.reenvioFormatado = reenvioFormatado;
+	}
+
 	public String getXpath() {
 		return xpath;
 	}
@@ -144,6 +159,14 @@ public class TransacaoPassoAcao extends AbstractDomain {
 
 	public void setPrefixoNameSpace(String prefixoNameSpace) {
 		this.prefixoNameSpace = prefixoNameSpace;
+	}
+	
+	public Long getIdFake() {
+		return idFake;
+	}
+
+	public void setIdFake(Long idFake) {
+		this.idFake = idFake;
 	}
 
 	@Override

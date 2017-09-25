@@ -8,37 +8,44 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 /**
  * @author Leonardo Andrade
  *
  */
 @Entity
-@Table(name = "ISC_TB001_APLICACAO")
-@SequenceGenerator(name = "seq_aplicacao", sequenceName = "ISC_TB001_APLICACAO_S", initialValue = 1)
+@Table(name = "APLIC")
+@NamedQueries({ @NamedQuery(name = "Aplicacao.findAll", query = "select t from Aplicacao t") })
+@SequenceGenerator(name = "seq_aplicacao", sequenceName = "SQ01_APLIC", initialValue = 1)
 public class Aplicacao extends AbstractDomain {
 
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -8447576111117282680L;
+	private static final long serialVersionUID = 3796406151073051879L;
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "seq_aplicacao")
-	@Column(name = "NU_APLICACAO", nullable = false, unique = true)
+	@Column(name = "N_APLIC", nullable = false, unique = true)
 	private Long id;
 
-	@Column(name = "CO_APLICACAO", nullable = true, length = 64)
+	@Column(name = "C_APLIC", nullable = true, length = 64)
 	private String codigo;
 
-	@Column(name = "DE_APLICACAO", nullable = true, length = 512)
+	@Column(name = "R_APLIC", nullable = true, length = 512)
 	private String descricao;
 
 	@ManyToOne(optional=true, cascade=CascadeType.REFRESH)
-	@JoinColumn(name = "NU_DIVISAO", nullable = true)
+	@JoinColumn(name = "N_DIVIS", nullable = true)
 	private Divisao divisao;
+	
+	@Transient
+	private boolean selecionada;
 	
 	public Long getId() {
 		return id;
@@ -70,6 +77,14 @@ public class Aplicacao extends AbstractDomain {
 
 	public void setDivisao(Divisao divisao) {
 		this.divisao = divisao;
+	}
+	
+	public boolean isSelecionada() {
+		return selecionada;
+	}
+
+	public void setSelecionada(boolean selecionada) {
+		this.selecionada = selecionada;
 	}
 
 	@Override
